@@ -1,7 +1,7 @@
 import  {Sequelize} from 'sequelize'
 import {createUserModel} from '../model/userSchema.js';
-import { roleMasterModel } from '../model/rolesMasterSchema.js';
-import { moduleMasterModel } from '../model/moduleMasterSchema.js';
+import { roleMasterModel } from '../model/rolesMasterSchema.js';  // you do not need to add rolesMasterSchema.js. Ignore all the files rel. to this file.
+import { moduleMasterModel } from '../model/moduleMasterSchema.js';  // you do not need to add moduleMasterSchema.js. Ignore all the files rel. to this file.
 
 const sequelize = new Sequelize('postgres', 'postgres', 'postgres123', {
     host: 'localhost',
