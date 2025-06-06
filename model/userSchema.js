@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 
 export const createUserModel = (sequelize) => {
-    console.log("Defining User model"); // 👈 Add this
+   
 
     const employee = sequelize.define('employee', {
         name: {
