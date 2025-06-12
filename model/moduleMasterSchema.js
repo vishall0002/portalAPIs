@@ -1,3 +1,5 @@
+import { DataTypes } from "sequelize";
+
 export const moduleMasterModel = (sequelize) => {
     console.log("Defining module_masters model");
 
@@ -12,12 +14,18 @@ export const moduleMasterModel = (sequelize) => {
             allowNull: false
         },
         permission: {
-            type: DataTypes.JSON,   // 👈 JSON format
+            type: DataTypes.JSON,   
             allowNull: false
         },
         status: {
             type: DataTypes.ENUM('active', 'inactive'),
-            allowNull: false
+            allowNull: false,
+            validate: {
+                isIn: {
+                    args: [['active', 'inactive']],
+                    msg: "Status must be either 'active' or 'inactive'"
+                }
+            }
         }
     }, {
         tableName: 'module_masters',

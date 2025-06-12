@@ -33,7 +33,7 @@ export const addEmp = async (req, res) => {
             await userModel.create({ name, email, desingnation, empId });
             return sendResponse(res, 200, 0, "Data inserted successfully");
         } else {
-            return sendResponse(res, 200, 2, "Employee ID already exists");
+            return sendResponse(res, 200, 1, "Employee ID already exists");
         }
     } catch (error) {
         console.error("Error inserting employee:", error);

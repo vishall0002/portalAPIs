@@ -9,8 +9,8 @@ const sequelize = new Sequelize('postgres', 'postgres', 'postgres123', {
   });
 
   let userModel = null;
-  let roleMastersModel = null;
-  let moduleMastersModel = null;
+  let roleModel = null;
+ let moduleModel = null;
 
   console.log('📁 postgres.js loaded');
   const connection = async () => {
@@ -22,8 +22,8 @@ const sequelize = new Sequelize('postgres', 'postgres', 'postgres123', {
       console.log('📦 Defining models...');
       userModel = createUserModel(sequelize);
       
-      roleMastersModel = roleMasterModel(sequelize)
-      moduleMastersModel = moduleMasterModel(sequelize);
+      roleModel = roleMasterModel(sequelize)
+      moduleModel = moduleMasterModel(sequelize);
 
       console.log('⚙️ Before sync');
       await sequelize.sync({ alter: true });
@@ -35,6 +35,6 @@ const sequelize = new Sequelize('postgres', 'postgres', 'postgres123', {
   
 
   export {
-    connection,userModel,roleMasterModel,moduleMasterModel
+    connection,userModel,roleModel,moduleModel
   }
   
