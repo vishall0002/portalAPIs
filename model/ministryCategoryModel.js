@@ -1,23 +1,19 @@
 import { DataTypes } from "sequelize";
 
-export const roleMasterModel = (sequelize) => {
-    console.log("Defining role_master model");
+export const ministryCategoryModel = (sequelize) => {
+    console.log("Defining ministry_category model");
 
-    const RoleMaster = sequelize.define('role_master', {
+    const MinistryCategory = sequelize.define('ministry_category', {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true
         },
-        name: {
+        ministry_category: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        access_permission: {
-            type: DataTypes.JSON,   
-            allowNull: false
-        },
-       status: {
+        status: {
             type: DataTypes.ENUM('active', 'inactive'),
             allowNull: false,
             validate: {
@@ -26,11 +22,21 @@ export const roleMasterModel = (sequelize) => {
                     msg: "Status must be either 'active' or 'inactive'"
                 }
             }
+        },
+        created: {
+            type: DataTypes.DATE,
+            allowNull: false,
+            defaultValue: DataTypes.NOW
+        },
+        updated: {
+            type: DataTypes.DATE,
+            allowNull: true
         }
     }, {
-        tableName: 'role_master',
+        tableName: 'ministry_category',
         timestamps: false
     });
 
-    return RoleMaster;
+    return MinistryCategory;
 };
+
