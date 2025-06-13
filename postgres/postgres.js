@@ -84,7 +84,7 @@ const connection = async () => {
     roleModel = roleMasterModel(sequelize);
     moduleModel = moduleMasterModel(sequelize);
 
-    // ✅ Setup associations here
+    // Setup associations here
     ministryModel.belongsTo(ministrycatModel, {
       foreignKey: 'ministry_category_id',
       targetKey: 'id',
