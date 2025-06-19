@@ -1,31 +1,83 @@
-// import express, { Router } from 'express';
 import express from 'express';
-import { addEmp, deleteEmployee, getAllEmp, singleEmployee} from '../controller/userController.js';
-import { addModuleMaster, deletemodule, getAllModule, singleModule, updateModule } from '../controller/moduleMaster.js';
-import { addrolemaster, allrolemaster, deleterole, singleRole, updateRoleMaster } from '../controller/roleMaster.js';
+
+import { authenticateToken } from '../middleware/authMiddleware.js';
+
+
+import {
+  addEmp, deleteEmployee, getAllEmp, singleEmployee
+} from '../controller/userController.js';
+
+import {
+  addModuleMaster, deletemodule, getAllModule, singleModule, updateModule
+} from '../controller/moduleMaster.js';
+
+import {
+  addrolemaster, allrolemaster, deleterole, singleRole, updateRoleMaster
+} from '../controller/roleMaster.js';
+
+import {
+  addministrycategory, deletecategoryfrommaster, getallministrycategory, singleministrycategory, updatesinglecategory
+} from '../controller/ministryCategory.js';
+
+import {
+  addministry, deleteministry, getallministry, singleministry ,updateMinistry
+} from '../controller/ministry.js';
 
 const router = express.Router();
 
-router.get('/getAll', getAllEmp);
-router.post('/addemp',addEmp)
-router.get('/singleemployee/:empId',singleEmployee);
-router.get('/deleteemployee/:empId',deleteEmployee);
+// ==========================
+// Protected Route (for testing)
+// ==========================
+router.get('/check-auth', authenticateToken, (req, res) => {
+  return res.json({
+    message: 'Token is valid. Authorized user.',
+    user: req.user,
+  });
+});
 
+// ==========================
+// Employee Routes
+// ==========================
+router.get('/employees', getAllEmp);
+router.post('/employees', addEmp);
+router.get('/employees/:empId', singleEmployee);
+router.delete('/employees/:empId', deleteEmployee);
 
-//Rouer for modules masters
+// ==========================
+// Module Master Routes
+// ==========================
+router.get('/modules', getAllModule);
+router.post('/modules', addModuleMaster);
+router.get('/modules/:id', singleModule);
+router.put('/modules/:id', updateModule);
+router.delete('/modules/:id', deletemodule);
 
-router.get('/getAllModule',getAllModule);
-router.get('/singleModule/:id',singleModule);
-router.post('/addmodule',addModuleMaster)
-router.get('/deletemodule/:id',deletemodule);
-router.put('/updatemodule/:id', updateModule);
+// ==========================
+// Role Master Routes
+// ==========================
+router.get('/roles', allrolemaster);
+router.post('/roles', addrolemaster);
+router.get('/roles/:id', singleRole);
+router.put('/roles/:id', updateRoleMaster);
+router.delete('/roles/:id', deleterole);
 
-//Rotuers for roles master
+// ==========================
+// Ministry Category Master Routes
+// ==========================
+router.get('/ministry-categories', getallministrycategory);
+router.post('/ministry-categories', addministrycategory);
+router.get('/ministry-categories/:id', singleministrycategory);
+router.put('/ministry-categories/:id', updatesinglecategory);
+router.delete('/ministry-categories/:id', deletecategoryfrommaster);
 
-router.post('/addrolemaster',addrolemaster)
-router.get('/allroles',allrolemaster);
-router.get('/deleterole/:id',deleterole);
-router.get('/singlerole/:id',singleRole);
-router.put('/updaterole/:id',updateRoleMaster)
+// ==========================
+//  Ministry Master Routes
+// ==========================
+router.get('/ministries', getallministry);
+router.post('/ministries', addministry);
+router.get('/ministries/:id', singleministry);
+router.delete('/ministries/:id', deleteministry);
+router.put('/ministry-masters/:id', updateMinistry);
 
 export default router;
+

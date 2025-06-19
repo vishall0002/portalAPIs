@@ -10,11 +10,13 @@ console.log('📁 index.js loaded');
 
 app.use(express.json());
 app.use(cors());
-app.use(router);
+// app.use(router);
+app.use('/api/v1', router)
 
 app.listen(PORT, () => {
     console.log(`🚀 Server is running on PORT ${PORT}`);
 });
+ReferenceError
 
 // Initialize DB connection
 connection();
