@@ -26,7 +26,7 @@ import {
 const router = express.Router();
 
 // ==========================
-// Protected Route (for testing)
+// Protected Route (for testing)  not implemented 
 // ==========================
 router.get('/check-auth', authenticateToken, (req, res) => {
   return res.json({
