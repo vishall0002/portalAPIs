@@ -16,14 +16,14 @@ const sequelize = new Sequelize('postgres', 'postgres', 'postgres123', {
  let ministrycatModel= null;
  let ministryModel = null;
 
-  console.log('📁 postgres.js loaded');
+  console.log('postgres.js loaded');
   const connection = async () => {
     try {
       console.log('➡ Starting DB connection'); // Add this
       await sequelize.authenticate();
       console.log('Connected to DB');
       
-      console.log('📦 Defining models...');
+      console.log('Defining models...');
       userModel = createUserModel(sequelize);
 
       console.log("ministry category model define");
@@ -41,7 +41,7 @@ const sequelize = new Sequelize('postgres', 'postgres', 'postgres123', {
       await sequelize.sync({ alter: true });
       console.log('After sync - models synced');
     } catch (error) {
-      console.error('❌ DB connection error:', error);
+      console.error('DB connection error:', error);
     }
   };
   
@@ -51,12 +51,18 @@ const sequelize = new Sequelize('postgres', 'postgres', 'postgres123', {
   }
   */
 
-  import { Sequelize } from 'sequelize';
+
+import { Sequelize } from 'sequelize';
+
 import { createUserModel } from '../model/userSchema.js';
 import { roleMasterModel } from '../model/rolesMasterSchema.js';
 import { moduleMasterModel } from '../model/moduleMasterSchema.js';
 import { ministryCategoryModel } from '../model/ministryCategoryModel.js';
 import { masterMinistryModel } from '../model/masterMinistryModel.js';
+
+import { createOrganisationTypeModel } from '../model/organisationTypeModel.js';
+import { createOrganisationMasterModel } from '../model/organisationMaster.js';
+import { createDesignationMasterModel } from '../model/designationMaster.js';
 
 const sequelize = new Sequelize('postgres', 'postgres', 'postgres123', {
   host: 'localhost',
@@ -68,37 +74,58 @@ let roleModel = null;
 let moduleModel = null;
 let ministrycatModel = null;
 let ministryModel = null;
+let organisationTypeModel = null;
+let organisationMasterModel = null;
+let designationMasterModel = null;
 
-console.log('📁 postgres.js loaded');
+console.log('postgres.js loaded');
 
 const connection = async () => {
   try {
     console.log('➡ Starting DB connection');
     await sequelize.authenticate();
-    console.log('Connected to DB');
+    console.log('onnected to DB');
 
-    console.log('📦 Defining models...');
+    console.log('Defining models...');
     userModel = createUserModel(sequelize);
     ministrycatModel = ministryCategoryModel(sequelize);
     ministryModel = masterMinistryModel(sequelize);
     roleModel = roleMasterModel(sequelize);
     moduleModel = moduleMasterModel(sequelize);
+    organisationTypeModel = createOrganisationTypeModel(sequelize);
+    organisationMasterModel = createOrganisationMasterModel(sequelize);
+    designationMasterModel = createDesignationMasterModel(sequelize);
 
-    // Setup associations here
+    // Setup associations
     ministryModel.belongsTo(ministrycatModel, {
       foreignKey: 'ministry_category_id',
       targetKey: 'id',
       as: 'category',
       onUpdate: 'CASCADE',
-      onDelete: 'RESTRICT'
+      onDelete: 'RESTRICT' 
     });
 
-    console.log('Before sync');
+    organisationMasterModel.belongsTo(organisationTypeModel, {
+      foreignKey: 'organisation_type_id',
+      as: 'organisationType'
+    });
+
+    organisationMasterModel.belongsTo(ministryModel, {
+      foreignKey: 'ministry_id',
+      as: 'ministry'
+    });
+
+    designationMasterModel.belongsTo(organisationMasterModel, {
+      foreignKey: 'organisation_id',
+      as: 'organisation'
+    });
+
+    console.log('Syncing models...');
     await sequelize.sync({ alter: true });
-    console.log('After sync - models synced');
+    console.log('Models synced');
 
   } catch (error) {
-    console.error('❌ DB connection error:', error);
+    console.error('DB connection error:', error);
   }
 };
 
@@ -109,4 +136,7 @@ export {
   moduleModel,
   ministrycatModel,
   ministryModel,
+  organisationTypeModel,
+  organisationMasterModel,
+  designationMasterModel
 };

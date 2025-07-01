@@ -24,22 +24,50 @@ import { sendResponse } from "./responseHandler.js";
 
 
 // to add any employee 
-    export const addEmp = async (req, res) => {
-        const { name, email, desingnation, empId } = req.body;
-        try {
-            // Check if employee with given empid already exists
-            const userExistingRecord = await userModel.findOne({ where: { empId } });
-            if (!userExistingRecord) {
-                await userModel.create({ name, email, desingnation, empId });
-                return sendResponse(res, 200, 0, "Data inserted successfully");
-            } else {
-                return sendResponse(res, 200, 1, "Employee ID already exists");
-            }
-        } catch (error) {
-            console.error("Error inserting employee:", error);
-            return sendResponse(res, 500, 2, "Internal server error");
+   export const addEmp = async (req, res) => {
+    const {
+        name,
+        email,
+        mobile,
+        desingnation_code, // as per your schema (typo preserved)
+        designation_name,
+        organisation_name,
+        organisation_id,
+        status = 'active',
+        role,
+        access_permission,
+        empId
+    } = req.body;
+
+    try {
+        // Check if employee with given empId already exists
+        const userExistingRecord = await userModel.findOne({ where: { empId } });
+
+        if (!userExistingRecord) {
+            await userModel.create({
+                name,
+                email,
+                mobile,
+                desingnation_code,
+                designation_name,
+                organisation_name,
+                organisation_id,
+                status,
+                role,
+                access_permission,
+                empId
+            });
+
+            return sendResponse(res, 200, 0, "Data inserted successfully");
+        } else {
+            return sendResponse(res, 200, 1, "Employee ID already exists");
         }
-    };
+    } catch (error) {
+        console.error("Error inserting employee:", error);
+        return sendResponse(res, 500, 2, "Internal server error");
+    }
+};
+
 
 
 // to get the data of the particular employee
