@@ -49,6 +49,7 @@ const sequelize = new Sequelize('postgres', 'postgres', 'postgres123', {
   export {
     connection,userModel,roleModel,moduleModel,ministrycatModel,ministryModel
   }
+    
   */
 
 
@@ -119,6 +120,23 @@ const connection = async () => {
       foreignKey: 'organisation_id',
       as: 'organisation'
     });
+
+
+    // Hook to populate ministry_name before insert
+    organisationMasterModel.beforeCreate(async (org, options) => {
+      const ministry = await ministryModel.findByPk(org.ministry_id);
+      if (ministry) {
+        org.ministry_name = ministry.ministry_name;
+      }
+    });
+
+    // update ministry_name on update too
+    // organisationMasterModel.beforeUpdate(async (org, options) => {
+    //   const ministry = await ministryModel.findByPk(org.ministry_id);
+    //   if (ministry) {
+    //     org.ministry_name = ministry.ministry_name;
+    //   }
+    // });
 
     console.log('Syncing models...');
     await sequelize.sync({ alter: true });

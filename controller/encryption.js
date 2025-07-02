@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 const secretKey = '52345678941834567870723486789012'; // Must be 32 bytes for AES-256
 const algorithm = 'aes-256-cbc';
+
 // Encrypt function
 export function vishal_encryption(data) {
   const iv = crypto.randomBytes(16); 

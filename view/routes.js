@@ -23,17 +23,34 @@ import {
   addministry, deleteministry, getallministry, singleministry ,updateMinistry
 } from '../controller/ministry.js';
 
+import {
+  getAllDesignations,
+  addDesignation,
+  getSingleDesignation,
+  updateDesignation
+} from '../controller/desingatonMaster.js';
+
+
+import {
+  getAllOrganisations,
+  getSingleOrganisation,
+  addOrganisation,
+  updateOrganisation,
+  deleteOrganisation
+} from '../controller/organisationMaster.js';
+
+
 const router = express.Router();
 
 // ==========================
-// Protected Route (for testing)  not implemented 
+// Protected Route (for testing)          ******************** NOT IMPLEMENTED YET **************
 // ==========================
-router.get('/check-auth', authenticateToken, (req, res) => {
-  return res.json({
-    message: 'Token is valid. Authorized user.',
-    user: req.user,
+  router.get('/check-auth', authenticateToken, (req, res) => {
+    return res.json({
+      message: 'Token is valid. Authorized user.',
+      user: req.user,
+    });
   });
-});
 
 // ==========================
 // Employee Routes
@@ -62,7 +79,7 @@ router.put('/roles/:id', updateRoleMaster);
 router.delete('/roles/:id', deleterole);
 
 // ==========================
-// Ministry Category Master Routes
+// Ministry Category Master Routesconst data = designation.toJSON();
 // ==========================
 router.get('/ministry-categories', getallministrycategory);
 router.post('/ministry-categories', addministrycategory);
@@ -78,6 +95,26 @@ router.post('/ministries', addministry);
 router.get('/ministries/:id', singleministry);
 router.delete('/ministries/:id', deleteministry);
 router.put('/ministry-masters/:id', updateMinistry);
+
+
+// ==========================
+//  Designation Master Routes
+// ==========================
+router.get('/designations', getAllDesignations);
+router.post('/designations', addDesignation);
+router.get('/designations/:id', getSingleDesignation);
+router.put('/designations/:id', updateDesignation);
+
+
+
+// ==========================
+//  organisation Master Routes
+// ==========================
+router.get('/organisations', getAllOrganisations);
+router.get('/organisations/:id', getSingleOrganisation);
+router.post('/organisations', addOrganisation);
+router.put('/organisations/:id', updateOrganisation);
+router.delete('/organisations/:id', deleteOrganisation);
 
 export default router;
 
