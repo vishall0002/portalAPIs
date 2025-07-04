@@ -1,5 +1,5 @@
 import { Op, fn, col, where as sqlWhere } from 'sequelize';
-import { organisationMasterModel, organisationTypeModel } from '../postgres/postgres.js';
+import { organisationMasterModel, organisationTypeModel, ministryModel} from '../postgres/postgres.js';
 import { sendResponse } from './responseHandler.js';
 import { vishal_encryption, vishal_decryption } from './encryption.js';
 
@@ -25,7 +25,7 @@ export const getAllOrganisations = async (req, res) => {
   }
 };
 
-// -----------------------------
+// -----------------------------ministryModel
 // Get Single Organisation
 // -----------------------------
 export const getSingleOrganisation = async (req, res) => {
@@ -60,16 +60,31 @@ export const addOrganisation = async (req, res) => {
     const orgTypeId = vishal_decryption(organisation_type_id);
     const ministryId = vishal_decryption(ministry_id);
 
+
+    console.log('Decrypted orgTypeId:', orgTypeId);
+    console.log('Decrypted ministryId:', ministryId);
+
+ 
+
+
+
     const existing = await organisationMasterModel.findOne({
       where: sqlWhere(fn('LOWER', col('organisation_name')), organisation_name.toLowerCase())
     });
+
     if (existing) return sendResponse(res, 409, 1, 'Organisation already exists');
+
+
+    const ministry = await ministryModel.findOne({ where: { id: ministryId } });
+    if (!ministry) return sendResponse(res, 404, 1, 'Ministry not found');
+
 
     await organisationMasterModel.create({
       organisation_name,
       organisation_code,
       organisation_type_id: orgTypeId,
-      ministry_id: ministryId
+      ministry_id: ministryId,
+      ministry_name: ministry.ministry_name 
     });
 
     return sendResponse(res, 200, 0, 'Organisation added successfully');

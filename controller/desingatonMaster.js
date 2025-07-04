@@ -1,5 +1,5 @@
 import { Op, fn, col, where as sqlWhere } from 'sequelize';
-import { designationMasterModel } from '../postgres/postgres.js';
+import { designationMasterModel , organisationMasterModel } from '../postgres/postgres.js';
 import { sendResponse } from './responseHandler.js';
 import { vishal_encryption, vishal_decryption } from './encryption.js';
 
@@ -31,34 +31,51 @@ export const getAllDesignations = async (req, res) => {
 // addDesignation
 // -----------------------------
 
-
-
 export const addDesignation = async (req, res) => {
-  try {
-    const { designation_name, organisation_id } = req.body;
-    if (!designation_name || !organisation_id)
-      return sendResponse(res, 400, 1, 'Missing required fields');
+    try {
+      const { designation_name, organisation_id } = req.body;
 
-    const orgId = vishal_decryption(organisation_id);
+      if (!designation_name || !organisation_id) {
+        return sendResponse(res, 400, 1, 'Missing required fields');
+      }
 
-    const exists = await designationMasterModel.findOne({
-      where: sqlWhere(fn('LOWER', col('designation_name')), designation_name.toLowerCase())
-    });
-    if (exists) return sendResponse(res, 409, 1, 'Designation already exists');
+      const orgId = vishal_decryption(organisation_id);
 
-    await designationMasterModel.create({
-      designation_name,
-      organisation_id: orgId
-    });
+      const organisation = await organisationMasterModel.findOne({
+        where: { id: orgId }
+      });
 
-    return sendResponse(res, 200, 0, 'Designation added successfully');
-  } catch (error) {
-    console.error('Error adding designation:', error);
-    return sendResponse(res, 500, 2, 'Internal server error');
-  }
-};
+      if (!organisation) {
+        return sendResponse(res, 404, 1, 'Invalid organisation ID');
+      }
+
+      const exists = await designationMasterModel.findOne({
+        where: sqlWhere(fn('LOWER', col('designation_name')), designation_name.toLowerCase())
+      });
+
+      if (exists) {
+        return sendResponse(res, 409, 1, 'Designation already exists');
+      }
+
+      const newDesignation = await designationMasterModel.create({
+        designation_name,
+        organisation_id: orgId,
+        organisation_name: organisation.organisation_name // added for refrence in future while fetching single designation detail 
+      });
+
+        await designationMasterModel.update(
+          { designation_code: newDesignation.id },
+          { where: { id: newDesignation.id } }
+        );
 
 
+      return sendResponse(res, 200, 0, 'Designation added successfully');
+    } catch (error) {
+      console.error('Error adding designation:', error);
+      return sendResponse(res, 500, 2, 'Internal server error');
+    }
+
+  };
 
 
 // -----------------------------

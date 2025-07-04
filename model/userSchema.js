@@ -25,7 +25,7 @@ export const createUserModel = (sequelize) => {
         },
         desingnation_code: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: true // set false if you do not want to enter null value by default. I am passing true just for checking purpose
         },
         designation_name: {
             type: DataTypes.STRING,

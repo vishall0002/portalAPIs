@@ -40,6 +40,13 @@ import {
 } from '../controller/organisationMaster.js';
 
 
+
+
+import {
+ getAllOrganisationTypes, getSingleOrganisationType,addOrganisationType,updateOrganisationType, deleteOrganisationType
+} from '../controller/organisationType.js';
+
+
 const router = express.Router();
 
 // ==========================
@@ -115,6 +122,16 @@ router.get('/organisations/:id', getSingleOrganisation);
 router.post('/organisations', addOrganisation);
 router.put('/organisations/:id', updateOrganisation);
 router.delete('/organisations/:id', deleteOrganisation);
+
+
+// ==========================
+//  Organisation Type Master Routes
+// ==========================
+router.get('/organisation-types', getAllOrganisationTypes);
+router.get('/organisation-types/:id', getSingleOrganisationType);
+router.post('/organisation-types', addOrganisationType);
+router.put('/organisation-types/:id', updateOrganisationType);
+router.delete('/organisation-types/:id', deleteOrganisationType);
 
 export default router;
 

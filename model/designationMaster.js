@@ -21,9 +21,13 @@ export const createDesignationMasterModel = (sequelize) => {
             onUpdate: 'CASCADE',
             onDelete: 'RESTRICT'
         },
+        organisation_name: {
+            type: DataTypes.STRING,
+            allowNull: true // you can set false if you do not want it to be set null by default
+        },
         designation_code: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: true // you can set false if you do not want it to be set null by default
         }
     }, {
         tableName: 'designation_master',
